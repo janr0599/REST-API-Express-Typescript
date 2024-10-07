@@ -1,19 +1,25 @@
 {
-  "name": "rest_api_node_ts_server",
-  "version": "1.0.0",
-  "description": "REST API's con Express y Typescript",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/janr0599/REST-API-Express-Typescript.git"
-  },
-  "author": "Javier Noguera",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/janr0599/REST-API-Express-Typescript/issues"
-  },
-  "homepage": "https://github.com/janr0599/REST-API-Express-Typescript#readme"
+    "name": "rest_api_node_ts_server",
+    "version": "1.0.0",
+    "description": "REST API's con Express y Typescript",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon --exec npx tsx src/index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/janr0599/REST-API-Express-Typescript.git"
+    },
+    "author": "Javier Noguera",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/janr0599/REST-API-Express-Typescript/issues"
+    },
+    "homepage": "https://github.com/janr0599/REST-API-Express-Typescript#readme",
+    "devDependencies": {
+        "nodemon": "^3.1.7",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.2"
+    }
 }

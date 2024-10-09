@@ -1,19 +1,22 @@
 import { Router } from "express";
-import { createProduct } from "./handlers/product";
-import { handleInputErrors } from "./middleware";
+import {
+    createProduct,
+    getProductById,
+    getProducts,
+    updateproduct,
+} from "./handlers/product";
+import { handleInputErrors, handleParamError } from "./middleware";
 
 const router = Router();
 
 //Routing
-router.get("/", (req, res) => {
-    res.json("Desde get");
-});
+router.get("/", getProducts);
+
+router.get("/:id", handleParamError, getProductById);
 
 router.post("/", handleInputErrors, createProduct);
 
-router.put("/", (req, res) => {
-    res.json("Desde put");
-});
+router.put("/:id", updateproduct);
 
 router.patch("/", (req, res) => {
     res.json("Desde patch");

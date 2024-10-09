@@ -1,4 +1,4 @@
-import { check, validationResult } from "express-validator";
+import { check, param, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
 export const handleInputErrors = async (
@@ -27,5 +27,20 @@ export const handleInputErrors = async (
         return;
     }
 
+    next();
+};
+
+export const handleParamError = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    await param("id").isInt().withMessage("Not a valid ID").run(req);
+
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+    }
     next();
 };

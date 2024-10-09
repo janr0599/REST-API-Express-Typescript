@@ -1,11 +1,18 @@
 import { Router } from "express";
 import {
     createProduct,
+    deleteProduct,
     getProductById,
     getProducts,
+    updateAvailability,
     updateproduct,
 } from "./handlers/product";
-import { handleInputErrors, handleParamError } from "./middleware";
+import {
+    handleDeleteError,
+    handleInputErrors,
+    handleParamError,
+    handleUpdateErrors,
+} from "./middleware";
 
 const router = Router();
 
@@ -16,14 +23,10 @@ router.get("/:id", handleParamError, getProductById);
 
 router.post("/", handleInputErrors, createProduct);
 
-router.put("/:id", updateproduct);
+router.put("/:id", handleUpdateErrors, updateproduct);
 
-router.patch("/", (req, res) => {
-    res.json("Desde patch");
-});
+router.patch("/:id", updateAvailability);
 
-router.delete("/", (req, res) => {
-    res.json("Desde delete");
-});
+router.delete("/:id", handleDeleteError, deleteProduct);
 
 export default router;

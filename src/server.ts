@@ -19,7 +19,11 @@ const connectDB = async () => {
 };
 connectDB();
 
+// Instancia de axios de express
 const server = express();
+
+// Leer datos de formularios
+server.use(express.json());
 
 server.use("/api/products", router);
 

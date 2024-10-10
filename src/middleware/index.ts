@@ -51,6 +51,8 @@ export const handleUpdateErrors = async (
     next: NextFunction
 ) => {
     // Validation
+    await param("id").isInt().withMessage("Not a valid ID").run(req);
+
     await check("name")
         .notEmpty()
         .withMessage("Product name is required")

@@ -1,5 +1,6 @@
 import request from "supertest";
 import server from "../../server";
+import { response } from "express";
 
 describe("POST api/products", () => {
     test("Should display validation errors", async () => {
@@ -103,8 +104,93 @@ describe("GET /api/products/:id", () => {
         expect(response.body.errors[0].msg).toBe("Not a valid ID");
     });
 
-    test("Should return a product by its ID", async () => {
+    test("Should return a JSON with product by its ID", async () => {
         const response = await request(server).get("/api/products/1");
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("data");
+
+        expect(response.status).not.toBe(404);
+        expect(response.body).not.toHaveProperty("error");
+    });
+});
+
+describe("PUT /api/products/:id", () => {
+    test("Should check a valid ID in the URL", async () => {
+        const response = await request(server)
+            .put("/api/products/not-valid-url")
+            .send({
+                name: "iPhone 13 Pro Max 6/128",
+                price: 799.99,
+                availability: true,
+            });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe("Not a valid ID");
+    });
+
+    test("should display validation error messages when updating a product", async () => {
+        const productID = 1;
+        const response = await request(server)
+            .put(`/api/products/${productID}`)
+            .send({});
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+        expect(response.body.errors).toHaveLength(5);
+
+        expect(response.status).not.toBe(200);
+        expect(response.body).not.toHaveProperty("data");
+    });
+
+    test("should validate that price is greater than 0", async () => {
+        const productID = 1;
+        const response = await request(server)
+            .put(`/api/products/${productID}`)
+            .send({
+                name: "iPhone 13 Pro Max 6/128",
+                price: -799.99,
+                availability: true,
+            });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe("Not a valid price");
+
+        expect(response.status).not.toBe(200);
+        expect(response.body).not.toHaveProperty("data");
+    });
+
+    test("Should return a 404 for a non existing product", async () => {
+        const productID = 2000;
+        const response = await request(server)
+            .put(`/api/products/${productID}`)
+            .send({
+                name: "iPhone 13 Pro Max 6/128",
+                price: 799.99,
+                availability: true,
+            });
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty("error");
+        expect(response.body.error).toBe("Product not found");
+
+        expect(response.status).not.toBe(200);
+        expect(response.body).not.toHaveProperty("data");
+    });
+
+    test("Should update an existing product with valid data", async () => {
+        const productID = 1;
+        const response = await request(server)
+            .put(`/api/products/${productID}`)
+            .send({
+                name: "iPhone 13 Pro Max 6/128",
+                price: 799.99,
+                availability: true,
+            });
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");

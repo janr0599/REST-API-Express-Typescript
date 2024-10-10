@@ -1,9 +1,15 @@
-describe("Our first test", () => {
-    test("Must check 1 + 1 equals 2", () => {
-        expect(1 + 1).toBe(2);
-    });
+import request from "supertest";
+import server from "../server";
 
-    test("Must check 1 + 1 is not equal to 3", () => {
-        expect(1 + 1).not.toBe(3);
+describe("GET /api", () => {
+    test("should send back a json response", async () => {
+        const res = await request(server).get("/api");
+
+        expect(res.status).toBe(200);
+        expect(res.headers["content-type"]).toMatch(/json/);
+        expect(res.body.msg).toBe("Desde API");
+
+        expect(res.status).not.toBe(404);
+        expect(res.body.msg).not.toBe("desde api");
     });
 });

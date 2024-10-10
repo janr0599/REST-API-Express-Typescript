@@ -76,3 +76,40 @@ describe("GET /api/products", () => {
         expect(response.body).not.toHaveProperty("errors");
     });
 });
+
+describe("GET /api/products/:id", () => {
+    test("Should return a 404 for a non existing product", async () => {
+        const productID = 2000;
+        const response = await request(server).get(
+            `/api/products/${productID}`
+        );
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty("error");
+        expect(response.body.error).toBe("Product not found");
+
+        expect(response.status).not.toBe(200);
+        expect(response.body).not.toHaveProperty("data");
+    });
+
+    test("Should check a valid ID in the URL", async () => {
+        const response = await request(server).get(
+            "/api/products/not-valid-url"
+        );
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe("Not a valid ID");
+    });
+
+    test("Should return a product by its ID", async () => {
+        const response = await request(server).get("/api/products/1");
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty("data");
+
+        expect(response.status).not.toBe(404);
+        expect(response.body).not.toHaveProperty("error");
+    });
+});
